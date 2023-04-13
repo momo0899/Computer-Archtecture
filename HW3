@@ -1,0 +1,59 @@
+#include<iostream>
+#include<fstream>
+#include<cmath>
+#include <algorithm>
+#include<vector>
+using namespace std;
+
+
+
+int main() {
+    int num_entries;
+    cout << "Enter Number of Enteries ";
+    cin >> num_entries;
+    int Num = log2(num_entries);
+    vector<int> arr(Num, 0);
+    int index = 0;
+    int place = 0;
+    ifstream input_file("input0");
+    string line;
+    while (getline(input_file, line)) {
+        // Remove leading/trailing whitespace from the line
+        line.erase(0, line.find_first_not_of(" \t"));
+        line.erase(line.find_last_not_of(" \t") + 1);
+
+        // Split the line into words
+        vector<string> words;
+        size_t pos = 0;
+        string delimiter = " ";
+        while ((pos = line.find(delimiter)) != string::npos) {
+            string word = line.substr(0, pos);
+            words.push_back(word);
+            line.erase(0, pos + delimiter.length());
+        }
+        words.push_back(line);
+
+        // Process each word in the line
+        for (const auto& word : words) {
+            if (index == Num) {
+                index = 0;
+            }
+            if (place == Num) {
+                place = 0;
+            }
+            int int_word = stoi(word);
+            auto it = find(arr.begin(), arr.end(), int_word);
+            if (it != arr.end()) {
+                cout << int_word << " : HIT" << endl;
+            } else {
+                cout << int_word << " : MISS" << endl;
+                arr[place] = int_word;
+                place += 1;
+            }
+            index += 1;
+        }
+    }
+    input_file.close();
+    return 0;
+} 
+  
